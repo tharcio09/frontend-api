@@ -8,7 +8,7 @@ Este projeto é a camada visual do ecossistema, focado em demonstrar o ciclo com
 
 ## Tecnologias Utilizadas
 
-* **React (com Vite)**: Biblioteca principal para construção da interface e renderização ultrarrápida no ambiente de desenvolvimento.
+* **React (com Vite)**: Biblioteca principal para construção da interface e renderização ultrarápida no ambiente de desenvolvimento.
 * **React Router DOM**: Gerenciamento de rotas (Navegação SPA) e criação de rotas protegidas.
 * **Fetch API**: Consumo nativo e assíncrono dos endpoints do Back-end.
 * **LocalStorage**: Persistência do Token JWT no navegador do usuário.
