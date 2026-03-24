@@ -14,7 +14,7 @@ Interface responsiva e moderna para captura de credenciais.
 
 ### Dashboard (Rota Privada)
 Painel administrativo acessível apenas com Token JWT válido, consumindo dados em tempo real da API.
-![Tela do Dashboard](./docs/tela-dashboard.png)
+![Tela do Dashboard](./docs/tela-dashboard.PNG)
 
 ---
 
