@@ -34,30 +34,54 @@ export function Login() {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h2>Login na Minha API</h2>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '10px' }}>
-                    <label>E-mail: </label>
-                    <input
-                        type="email"
-                        placeholder="Digite seu e-mail"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+        <div className="min-h-screen flex items-center justify-center px-4">
+            <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8 space-y-6">
+                <div className="text-center">
+                    <h2 className="text-3xl font-extrabold text-gray-900">
+                        Minha API
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Faça login para acessar o painel
+                    </p>
                 </div>
 
-                <div style={{ marginBottom: '10px' }}>
-                    <label>Senha: </label>
-                    <input
-                        type="password"
-                        placeholder="Digite sua senha"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Entrar</button>
-            </form>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            E-mail:
+                        </label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Digite seu e-mail"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block test-sm font-medium text-gray-700 mb-1">
+                            Senha:
+                        </label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            required
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors mt-4"
+                    >
+                        Entrar no Sistema
+                    </button>
+                </form>
+            </div>
         </div>
     );
 
