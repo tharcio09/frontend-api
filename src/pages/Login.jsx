@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export function Login() {
     const [email, setEmail] = useState('');
@@ -81,6 +81,14 @@ export function Login() {
                         Entrar no Sistema
                     </button>
                 </form>
+                <div className="text-center mt-6">
+                    <p className="text-sm text-gray-600">
+                        Ainda não tem uma conta?{' '}
+                        <Link to="/cadastro" className="text-blue-600 hover:underline font-semibold">
+                            Cadastre-se aqui
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );
