@@ -42,6 +42,35 @@ export function Dashboard() {
         navigate('/');
     };
 
+    const deletarUsuario = async (id) => {
+
+        const confirmacao = window.confirm("Tem certeza que deseja excluir este usuário?");
+        if (!confirmacao) return;
+
+        const tokenGuardado = localStorage.getItem('meu_token_vip');
+
+        try {
+            const resposta = await fetch(`http://localhost:3000/usuario/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${tokenGuardado}`
+                }
+            });
+
+            if (resposta.ok) {
+                setListaUsuarios((listaAnterior) =>
+                    listaAnterior.filter((usuario) => usuario._id !== id)
+                );
+                alert("Usuário excluído com sucesso!");
+            } else {
+                const dados = await resposta.json();
+                alert("Erro ao excluir;" + dados.message);
+            }
+        } catch (error) {
+            console.error("Erro na requisição de exclusão", error);
+        }
+    }
+
     return (
         <div className="min-h-screen bg-gray-50">
 
@@ -85,10 +114,17 @@ export function Dashboard() {
                                             <p className="text-sm font-medium text-gray-900">{usuario.name}</p>
                                             <p className="text-sm text-gray-500">{usuario.email}</p>
                                         </div>
-                                        <div className="flex items-center">
+                                        <div className="flex items-center space-x-4">
                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                 Ativo
                                             </span>
+                                            {/*Botão de Excluir */}
+                                            <button
+                                                onClick={() => deletarUsuario(usuario._id)}
+                                                className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded transition-colors text-sm font-semibold border border-transparent hover:border-red-200"
+                                            >
+                                                Excluir
+                                            </button>
                                         </div>
                                     </li>
                                 ))}
