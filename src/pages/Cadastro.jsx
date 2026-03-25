@@ -11,7 +11,7 @@ export function Cadastro() {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://localhost:3000/usuario', {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: nome, email, password })

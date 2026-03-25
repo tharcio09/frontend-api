@@ -17,7 +17,7 @@ export function Dashboard() {
             }
 
             try {
-                const resposta = await fetch('http://localhost:3000/usuario', {
+                const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${tokenGuardado}`
@@ -50,7 +50,7 @@ export function Dashboard() {
         const tokenGuardado = localStorage.getItem('meu_token_vip');
 
         try {
-            const resposta = await fetch(`http://localhost:3000/usuario/${id}`, {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${tokenGuardado}`
