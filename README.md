@@ -2,7 +2,7 @@
 
 Uma Single Page Application (SPA) desenvolvida em **React** para consumir uma API RESTful segura. 
 
-Este projeto é a camada visual de um ecossistema Full-Stack, focado em demonstrar o ciclo completo de autenticação, desde a captura de credenciais, gerenciamento de rotas privadas com Tokens JWT, até testes automatizados de ponta a ponta.
+Este projeto é a camada visual de um ecossistema Full-Stack, focado em demonstrar o ciclo completo de autenticação, desde o cadastro de novos usuários, captura de credenciais, gerenciamento de rotas privadas com Tokens JWT, até testes automatizados de ponta a ponta.
 
 ---
 
@@ -12,8 +12,12 @@ Este projeto é a camada visual de um ecossistema Full-Stack, focado em demonstr
 Interface responsiva e moderna para captura de credenciais.
 ![Tela de Login](./docs/tela-login.PNG)
 
+### Tela de Cadastro (Sign Up)
+Formulário integrado com a rota pública da API para criação de novas contas diretamente pelo sistema.
+![Tela de Cadastro](./docs/tela-cadastro.PNG)
+
 ### Dashboard (Rota Privada)
-Painel administrativo acessível apenas com Token JWT válido, consumindo dados em tempo real da API.
+Painel administrativo acessível apenas com Token JWT válido, consumindo dados em tempo real da API com funcionalidade de exclusão otimista.
 ![Tela do Dashboard](./docs/tela-dashboard.PNG)
 
 ---
@@ -30,7 +34,8 @@ Painel administrativo acessível apenas com Token JWT válido, consumindo dados 
 
 ## O que foi implementado neste projeto
 
-* **State Management e Ciclo de Vida**: Controle de formulários (Controlled Components) com `useState` e disparo automático de requisições com `useEffect`.
+* **Ciclo CRUD Completo pelo Front-end**: Criação (Sign Up), Leitura (Listagem protegida) e Exclusão de usuários consumindo a API.
+* **State Management e Atualização Otimista**: Controle de formulários com `useState`, requisições automáticas com `useEffect` e manipulação de arrays na memória para remover itens da tela instantaneamente sem recarregar a página.
 * **Autenticação de Ponta a Ponta**: 
   * Captura e envio seguro de credenciais.
   * Armazenamento do Token JWT no cofre do navegador.
@@ -42,15 +47,13 @@ Painel administrativo acessível apenas com Token JWT válido, consumindo dados 
 
 ## Estrutura de Pastas
 
-A arquitetura do projeto separa claramente as responsabilidades:
-
 ```text
 /
  ├── cypress/        # Suíte de testes automatizados E2E (login.cy.js)
  ├── docs/           # Imagens e assets para a documentação
  ├── src/
  │   ├── components/ # Componentes lógicos (ex: RotaPrivada.jsx)
- │   ├── pages/      # Telas completas (ex: Login.jsx, Dashboard.jsx)
+ │   ├── pages/      # Telas completas (ex: Login.jsx, Cadastro.jsx, Dashboard.jsx)
  │   ├── App.jsx     # Ponto de entrada e central de roteamento
  │   └── index.css   # Diretivas globais do Tailwind CSS
 ```
