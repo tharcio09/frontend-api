@@ -21,6 +21,13 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npm run dev
-          wait-on: 'http://localhost:5173/'
+          wait-on: 'http://localhost:5173'
         env:
-          VITE_API_URL: https://minha-api-lih7.onrender.com/
+          VITE_API_URL: https://minha-api-lih7.onrender.com
+
+      - name: 📸 Salvar Screenshots da Falha
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
