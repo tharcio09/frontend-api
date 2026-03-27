@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export function Login() {
     const [email, setEmail] = useState('');
@@ -25,7 +26,7 @@ export function Login() {
                 localStorage.setItem('meu_token_vip', dados.token);
                 navigate('/dashboard');
             } else {
-                alert("Erro no login: " + dados.message);
+                toast.error("Erro no login: " + dados.message);
             }
 
         } catch (error) {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export function Cadastro() {
     const [nome, setNome] = useState('');
@@ -18,11 +19,11 @@ export function Cadastro() {
             });
 
             if (resposta.ok) {
-                alert("Conta criada com sucesso! Você já pode fazer login.");
+                toast.success("Conta criada com sucesso! Você já pode fazer login.");
                 navigate('/');
             } else {
                 const dados = await resposta.json();
-                alert("Erro ao criar conta: " + dados.message);
+                toast.error("Erro ao criar conta: " + dados.message);
             }
         } catch (error) {
             console.error("Erro na requisição:", error);

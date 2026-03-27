@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 
 export function Dashboard() {
@@ -48,10 +49,10 @@ export function Dashboard() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['lista-usuarios'] });
-            alert('Usuário excluído com sucesso!');
+            toast.success('Usuário excluído com sucesso!');
         },
         onError: (erro) => {
-            alert(erro.message);
+            toast.error(`Erro: ${erro.message}`);
         }
     });
 

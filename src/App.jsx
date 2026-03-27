@@ -3,10 +3,12 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Cadastro } from './pages/Cadastro';
 import { RotaPrivada } from './components/RotaPrivada';
+import { Toaster } from 'react-hot-toast';
 
 export function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
