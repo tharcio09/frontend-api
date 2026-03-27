@@ -6,6 +6,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=React_Query&logoColor=white)
 ![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white)
+![React Hot Toast](https://img.shields.io/badge/React_Hot_Toast-F9F9E3?style=for-the-badge&logo=react&logoColor=black)
 
 Uma Single Page Application (SPA) robusta e moderna, desenvolvida para demonstrar o consumo seguro de uma API RESTful. 
 
@@ -30,6 +31,7 @@ Este projeto atua como a camada visual de um ecossistema Full-Stack, cobrindo o 
   * Injeção automática do Token via Header (`Authorization: Bearer`) e tratamento de sessão expirada (Erro 401).
 * **Rotas Privadas (Protected Routes):** Componente Wrapper (`<RotaPrivada>`) que intercepta usuários não autenticados e redireciona para o Login instantaneamente.
 * **Ciclo CRUD Completo:** Criação (Sign Up), Leitura (Listagem protegida) e Exclusão de dados conectados ao banco de dados real.
+* * **Feedback Visual Avançado:** Substituição de alertas nativos bloqueantes por notificações globais e assíncronas (Toasts), garantindo uma navegação fluida e UX de alto nível.
 
 ---
 
