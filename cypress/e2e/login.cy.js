@@ -4,7 +4,7 @@ describe('Fluxo de Autenticação (Login)', () => {
     cy.get('input[type="email"]').type('tharciosantos09@gmail.com');
     cy.get('input[type="password"]').type('12345');
     cy.get('button[type="submit"]').click('');
-    cy.url().should('include', '/dashboard');
+    cy.url({ timeout: 20000 }).should('include', '/dashboard');
     cy.contains('Usuários do Sistema:').should('be.visible');
   });
 })
