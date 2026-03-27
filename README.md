@@ -1,8 +1,37 @@
-# Meu Frontend - Consumo de API com Autenticação JWT
 
-Uma Single Page Application (SPA) desenvolvida em **React** para consumir uma API RESTful segura. 
+```markdown
+# Aplicação Front-end: Autenticação JWT & Dashboard
 
-Este projeto é a camada visual de um ecossistema Full-Stack, focado em demonstrar o ciclo completo de autenticação, desde o cadastro de novos usuários, captura de credenciais, gerenciamento de rotas privadas com Tokens JWT, até testes automatizados de ponta a ponta.
+[![Pipeline E2E](https://github.com/tharcio09/frontend-api/actions/workflows/cypress.yml/badge.svg)](https://github.com/tharcio09/frontend-api/actions)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=React_Query&logoColor=white)
+![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white)
+
+Uma Single Page Application (SPA) robusta e moderna, desenvolvida para demonstrar o consumo seguro de uma API RESTful. 
+
+Este projeto atua como a camada visual de um ecossistema Full-Stack, cobrindo o ciclo completo de autenticação: desde o cadastro e login, gerenciamento de rotas privadas com Tokens JWT, até o controle de estado global e cache de dados com React Query, garantindo alta performance e resiliência.
+
+---
+
+## Links de Produção
+
+* **Live Demo (Front-end):** [Acesse a aplicação na Vercel](https://seu-link-da-vercel.vercel.app)
+* **Back-end API (Render):** `https://minha-api-lih7.onrender.com`
+* **Banco de Dados:** MongoDB Atlas
+
+---
+
+## O que foi implementado neste projeto
+
+* **Integração Contínua (CI/CD):** Pipeline automatizada com GitHub Actions rodando testes E2E do Cypress a cada *push* na *main*, garantindo que quebras de código não cheguem em produção.
+* **Gerenciamento Avançado de Estado e Cache:** Substituição do padrão tradicional de `useEffect`/`useState` pelo **TanStack Query (React Query)**, proporcionando cache de dados, tratamento de *loading/error* nativo e atualizações instantâneas de tela via Mutações (`useMutation`).
+* **Autenticação de Ponta a Ponta:** * Captura e envio seguro de credenciais.
+  * Armazenamento seguro do Token JWT.
+  * Injeção automática do Token via Header (`Authorization: Bearer`) e tratamento de sessão expirada (Erro 401).
+* **Rotas Privadas (Protected Routes):** Componente Wrapper (`<RotaPrivada>`) que intercepta usuários não autenticados e redireciona para o Login instantaneamente.
+* **Ciclo CRUD Completo:** Criação (Sign Up), Leitura (Listagem protegida) e Exclusão de dados conectados ao banco de dados real.
 
 ---
 
@@ -17,55 +46,32 @@ Formulário integrado com a rota pública da API para criação de novas contas 
 ![Tela de Cadastro](./docs/tela-cadastro.PNG)
 
 ### Dashboard (Rota Privada)
-Painel administrativo acessível apenas com Token JWT válido, consumindo dados em tempo real da API com funcionalidade de exclusão otimista.
+Painel administrativo acessível apenas com Token JWT válido. Utiliza React Query para garantir que os dados estejam sempre atualizados sem recarregar a página.
 ![Tela do Dashboard](./docs/tela-dashboard.PNG)
-
----
-
-## Tecnologias Utilizadas
-
-* **React (com Vite)**: Biblioteca principal para construção da interface e renderização ultrarrápida.
-* **Tailwind CSS (v4)**: Estilização utilitária de alta performance para um design moderno e profissional.
-* **React Router DOM**: Gerenciamento de rotas (Navegação SPA) e criação de rotas protegidas.
-* **Fetch API & LocalStorage**: Consumo nativo de endpoints e persistência do Token JWT no navegador.
-* **Cypress**: Framework para testes automatizados Ponta a Ponta (E2E).
-
----
-
-## O que foi implementado neste projeto
-
-* **Ciclo CRUD Completo pelo Front-end**: Criação (Sign Up), Leitura (Listagem protegida) e Exclusão de usuários consumindo a API.
-* **State Management e Atualização Otimista**: Controle de formulários com `useState`, requisições automáticas com `useEffect` e manipulação de arrays na memória para remover itens da tela instantaneamente sem recarregar a página.
-* **Autenticação de Ponta a Ponta**: 
-  * Captura e envio seguro de credenciais.
-  * Armazenamento do Token JWT no cofre do navegador.
-  * Injeção do Token via Header (`Authorization: Bearer`) para consumo de rotas trancadas.
-* **Rotas Privadas (Protected Routes)**: Componente Wrapper (`<RotaPrivada>`) que intercepta usuários não autenticados e redireciona para o Login instantaneamente.
-* **Testes E2E (Cypress)**: Robô de testes configurado para validar o fluxo de login completo, preenchendo dados, validando o redirecionamento de URL e a renderização do Dashboard na tela.
-
----
-
-## Estrutura de Pastas
-
-```text
-/
- ├── cypress/        # Suíte de testes automatizados E2E (login.cy.js)
- ├── docs/           # Imagens e assets para a documentação
- ├── src/
- │   ├── components/ # Componentes lógicos (ex: RotaPrivada.jsx)
- │   ├── pages/      # Telas completas (ex: Login.jsx, Cadastro.jsx, Dashboard.jsx)
- │   ├── App.jsx     # Ponto de entrada e central de roteamento
- │   └── index.css   # Diretivas globais do Tailwind CSS
-```
 
 ---
 
 ## Como rodar o projeto localmente
 
-1. Clone o repositório.
-2. Certifique-se de que a API de Back-end está rodando na porta `3000`.
-3. Instale as dependências: `npm install`
-4. Inicie o servidor de desenvolvimento: `npm run dev`
-5. Para assistir aos robôs de teste em ação, abra um novo terminal e rode: `npx cypress open`
-
----
+1. Clone este repositório:
+   ```bash
+   git clone [https://github.com/tharcio09/frontend-api.git](https://github.com/tharcio09/frontend-api.git)
+   ```
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Configure as Variáveis de Ambiente:
+   Crie um arquivo `.env` na raiz do projeto e aponte para a sua API (local ou em nuvem):
+   ```env
+   VITE_API_URL=[https://minha-api-lih7.onrender.com](https://minha-api-lih7.onrender.com)
+   ```
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+5. Para assistir aos robôs de teste em ação, abra um novo terminal e rode:
+   ```bash
+   npx cypress open
+   ```
+```
