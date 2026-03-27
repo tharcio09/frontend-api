@@ -53,7 +53,7 @@ Painel administrativo acessível apenas com Token JWT válido. Utiliza React Que
 
 1. Clone este repositório:
    ```bash
-   git clone [https://github.com/tharcio09/frontend-api.git](https://github.com/tharcio09/frontend-api.git)
+   git clone https://github.com/tharcio09/frontend-api.git
    ```
 2. Instale as dependências:
    ```bash
@@ -62,7 +62,7 @@ Painel administrativo acessível apenas com Token JWT válido. Utiliza React Que
 3. Configure as Variáveis de Ambiente:
    Crie um arquivo `.env` na raiz do projeto e aponte para a sua API (local ou em nuvem):
    ```env
-   VITE_API_URL=[https://minha-api-lih7.onrender.com](https://minha-api-lih7.onrender.com)
+   VITE_API_URL=https://minha-api-lih7.onrender.com
    ```
 4. Inicie o servidor de desenvolvimento:
    ```bash
