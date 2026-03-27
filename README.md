@@ -15,7 +15,7 @@ Este projeto atua como a camada visual de um ecossistema Full-Stack, cobrindo o 
 
 ## Links de Produção
 
-* **Live Demo (Front-end):** [Acesse a aplicação na Vercel](https://seu-link-da-vercel.vercel.app)
+* **Live Demo (Front-end):** [Acesse a aplicação na Vercel](https://frontend-api-weld.vercel.app/)
 * **Back-end API (Render):** `https://minha-api-lih7.onrender.com`
 * **Banco de Dados:** MongoDB Atlas
 
