@@ -1,75 +1,59 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 
 export function Dashboard() {
-    const [listaUsuarios, setListaUsuarios] = useState([]);
     const navigate = useNavigate();
 
+    const { data: listaUsuarios, isLoading, isError } = useQuery({
+        queryKey: ['lista-usuarios'],
+        queryFn: async () => {
+            const token = localStorage.getItem('meu_token_vip');
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
 
-    useEffect(() => {
-        const buscarUsuarios = async () => {
-            const tokenGuardado = localStorage.getItem('meu_token_vip');
-
-            if (!tokenGuardado) {
-                console.log("Sem token, impossível buscar dados.");
-                return;
-            }
-
-            try {
-                const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${tokenGuardado}`
-                    }
-                });
-                const dados = await resposta.json();
-
-                if (resposta.ok) {
-                    setListaUsuarios(dados);
+            if (!resposta.ok) {
+                if (respostastatus === 401) {
+                    localStorage.removeItem('meu_token_vip');
+                    navigate('/');
+                    throw new Error('Sessão expirada. Faça login novamente.');
                 }
-            } catch (error) {
-                console.error("Erro ao buscar usuários", error);
+                throw new Error('Falha ao buscar usuários');
             }
-        };
 
-        buscarUsuarios();
-
-    }, []);
+            return resposta.json();
+        },
+        retry: false
+    });
 
     const handleLogout = () => {
         localStorage.removeItem('meu_token_vip');
         navigate('/');
     };
 
-    const deletarUsuario = async (id) => {
+    const queryClient = useQueryClient();
 
-        const confirmacao = window.confirm("Tem certeza que deseja excluir este usuário?");
-        if (!confirmacao) return;
+    const mutacaoExcluir = useMutation({
+        mutationFn: async (id) => {
+            const token = localStorage.getItem('meu_token_vip');
 
-        const tokenGuardado = localStorage.getItem('meu_token_vip');
-
-        try {
             const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${tokenGuardado}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            if (resposta.ok) {
-                setListaUsuarios((listaAnterior) =>
-                    listaAnterior.filter((usuario) => usuario._id !== id)
-                );
-                alert("Usuário excluído com sucesso!");
-            } else {
-                const dados = await resposta.json();
-                alert("Erro ao excluir;" + dados.message);
-            }
-        } catch (error) {
-            console.error("Erro na requisição de exclusão", error);
+            if (!resposta.ok) throw new Error('Erro ao excluir usuário');
+            return resposta.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['lista-usuarios'] });
+            alert('Usuário excluído com sucesso!');
+        },
+        onError: (erro) => {
+            alert(erro.message);
         }
-    }
+    });
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -102,13 +86,15 @@ export function Dashboard() {
                     </div>
 
                     <div className="p-6">
-                        {listaUsuarios.length === 0 ? (
+                        {listaUsuarios?.length === 0 ? (
                             <div className="text-center py-4 text-gray-500">
                                 Carregando usuários...
                             </div>
                         ) : (
                             <ul className="divide-y divide-gray-200">
-                                {listaUsuarios.map((usuario) => (
+                                {isLoading && <p className="text-blue-500 font-semibold">Carregando usuários...</p>}
+                                {isError && <p className="text-red-500 font-semibold">Erro ao carregar os dados.</p>}
+                                {listaUsuarios?.map((usuario) => (
                                     <li key={usuario._id} className="py-4 flex hover:bg-gray-50 transition-colors px-2 rounded -mx-2">
                                         <div className="flex-1">
                                             <p className="text-sm font-medium text-gray-900">{usuario.name}</p>
@@ -118,12 +104,12 @@ export function Dashboard() {
                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                 Ativo
                                             </span>
-                                            {/*Botão de Excluir */}
                                             <button
-                                                onClick={() => deletarUsuario(usuario._id)}
-                                                className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded transition-colors text-sm font-semibold border border-transparent hover:border-red-200"
+                                                onClick={() => mutacaoExcluir.mutate(usuario._id)}
+                                                disabled={mutacaoExcluir.isPending}
+                                                className="text-red-500 font-bold hover:text-red-700 disabled:opacity-50"
                                             >
-                                                Excluir
+                                                {mutacaoExcluir.isPending ? 'Excluindo...' : 'Excluir'}
                                             </button>
                                         </div>
                                     </li>
