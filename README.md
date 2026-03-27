@@ -1,5 +1,3 @@
-
-```markdown
 # Aplicação Front-end: Autenticação JWT & Dashboard
 
 [![Pipeline E2E](https://github.com/tharcio09/frontend-api/actions/workflows/cypress.yml/badge.svg)](https://github.com/tharcio09/frontend-api/actions)
@@ -74,4 +72,4 @@ Painel administrativo acessível apenas com Token JWT válido. Utiliza React Que
    ```bash
    npx cypress open
    ```
-```
+
