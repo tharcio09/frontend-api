@@ -7,6 +7,8 @@
 ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=React_Query&logoColor=white)
 ![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white)
 ![React Hot Toast](https://img.shields.io/badge/React_Hot_Toast-F9F9E3?style=for-the-badge&logo=react&logoColor=black)
+![React Hot Toast](https://img.shields.io/badge/React_Hot_Toast-F9F9E3?style=for-the-badge&logo=react&logoColor=black)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=Cloudinary&logoColor=white)
 
 Uma Single Page Application (SPA) robusta e moderna, desenvolvida para demonstrar o consumo seguro de uma API RESTful. 
 
@@ -32,6 +34,7 @@ Este projeto atua como a camada visual de um ecossistema Full-Stack, cobrindo o 
 * **Rotas Privadas (Protected Routes):** Componente Wrapper (`<RotaPrivada>`) que intercepta usuários não autenticados e redireciona para o Login instantaneamente.
 * **Ciclo CRUD Completo:** Criação (Sign Up), Leitura (Listagem protegida) e Exclusão de dados conectados ao banco de dados real.
 * * **Feedback Visual Avançado:** Substituição de alertas nativos bloqueantes por notificações globais e assíncronas (Toasts), garantindo uma navegação fluida e UX de alto nível.
+* * **Upload de Imagens e Integração com CDN:** Manipulação de arquivos pesados no Front-end utilizando a interface nativa `FormData`. Comunicação ponta a ponta com a API (Node.js + Multer) para processamento e hospedagem de imagens na nuvem através do **Cloudinary** (CDN), com invalidação de cache inteligente via React Query para exibir o novo avatar em tempo real.
 
 ---
 
@@ -46,8 +49,8 @@ Formulário integrado com a rota pública da API para criação de novas contas 
 ![Tela de Cadastro](./docs/tela-cadastro.PNG)
 
 ### Dashboard (Rota Privada)
-Painel administrativo acessível apenas com Token JWT válido. Utiliza React Query para garantir que os dados estejam sempre atualizados sem recarregar a página.
-![Tela do Dashboard](./docs/tela-dashboard.PNG)
+Painel administrativo acessível apenas com Token JWT válido. Utiliza React Query para garantir que os dados estejam sempre atualizados sem recarregar a página. Conta com funcionalidade de **Upload de Avatar**, enviando a imagem para a nuvem e atualizando a interface instantaneamente.
+![Tela do Dashboard com Avatar](./docs/tela-dashboard.PNG)
 
 ---
 
