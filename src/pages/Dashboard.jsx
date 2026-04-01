@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -6,11 +7,11 @@ export function Dashboard() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const { data: listaUsuarios, isLoading, isError } = useQuery({
-        queryKey: ['lista-usuarios'],
+    const { data: perfil, isLoading, isError } = useQuery({
+        queryKey: ['meu-perfil'],
         queryFn: async () => {
             const token = localStorage.getItem('meu_token_vip');
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario`, {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/meu-perfil`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -20,7 +21,7 @@ export function Dashboard() {
                     navigate('/');
                     throw new Error('Sessão expirada. Faça login novamente.');
                 }
-                throw new Error('Falha ao buscar usuários');
+                throw new Error('Falha ao buscar seu perfil');
             }
             return resposta.json();
         },
@@ -32,29 +33,9 @@ export function Dashboard() {
         navigate('/');
     };
 
-    const mutacaoExcluir = useMutation({
-        mutationFn: async (id) => {
-            const token = localStorage.getItem('meu_token_vip');
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!resposta.ok) throw new Error('Erro ao excluir usuário');
-            return resposta.json();
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lista-usuarios'] });
-            toast.success('Usuário excluído com sucesso!');
-        },
-        onError: (erro) => {
-            toast.error(`Erro: ${erro.message}`);
-        }
-    });
-
     const mutacaoUploadFoto = useMutation({
         mutationFn: async (arquivo) => {
             const token = localStorage.getItem('meu_token_vip');
-
             const formData = new FormData();
             formData.append('foto', arquivo);
 
@@ -70,7 +51,7 @@ export function Dashboard() {
             return resposta.json();
         },
         onSuccess: (dados) => {
-            queryClient.invalidateQueries({ queryKey: ['lista-usuarios'] });
+            queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
             toast.success(dados.message || 'Sua foto foi atualizada!');
         },
         onError: (erro) => {
@@ -85,12 +66,51 @@ export function Dashboard() {
         }
     };
 
+    const mutacaoAdicionarLink = useMutation({
+        mutationFn: async (novoLink) => {
+            const token = localStorage.getItem('meu_token_vip');
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario/link`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(novoLink)
+            });
+
+            if (!resposta.ok) throw new Error('Erro ao adicionar o link');
+            return resposta.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
+            toast.success('Link adicionado!');
+        },
+        onError: (erro) => {
+            toast.error(erro.message);
+        }
+    });
+
+    const [novoTitulo, setNovoTitulo] = useState('');
+    const [novaUrl, setNovaUrl] = useState('');
+
+    const handleAdicionarLink = (e) => {
+        e.preventDefault();
+
+        if (!novoTitulo || !novaUrl) {
+            return toast.error('Preencha o título e a URL!');
+        }
+        mutacaoAdicionarLink.mutate({ titulo: novoTitulo, url: novaUrl });
+
+        setNovoTitulo('');
+        setNovaUrl('');
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <nav className="bg-white shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16 items-center">
-                        <h1 className="text-xl font-bold text-blue-600">Painel de Controle</h1>
+                        <h1 className="text-xl font-bold text-blue-600">Meu Painel</h1>
 
                         <div className="flex items-center space-x-4">
                             <label className={`cursor-pointer font-semibold py-2 px-4 border rounded shadow-sm transition-colors ${mutacaoUploadFoto.isPending ? 'bg-gray-100 text-gray-400 border-gray-200' : 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'}`}>
@@ -115,67 +135,85 @@ export function Dashboard() {
                 </div>
             </nav>
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-                    <div className="px-6 py-5 border-b border-gray-200 bg-gray-50">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Usuários Cadastrados
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                            Lista completa de usuários retornada pela API segura.
-                        </p>
-                    </div>
+            <main className="max-w-md mx-auto py-12 px-4 sm:px-6">
 
-                    <div className="p-6">
-                        {listaUsuarios?.length === 0 ? (
-                            <div className="text-center py-4 text-gray-500">
-                                Nenhum usuário encontrado.
+                {isLoading && <p className="text-center text-blue-500 font-semibold">Carregando seu perfil...</p>}
+                {isError && <p className="text-center text-red-500 font-semibold">Erro ao carregar perfil.</p>}
+
+                {!isLoading && !isError && perfil && (
+                    <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                        <div className="bg-blue-600 h-24"></div>
+
+                        <div className="px-6 pb-8">
+                            <div className="relative -mt-12 mb-4 flex justify-center">
+                                {perfil.avatar ? (
+                                    <img
+                                        src={perfil.avatar}
+                                        alt={`Avatar de ${perfil.name}`}
+                                        className="h-24 w-24 rounded-full border-4 border-white shadow-lg object-cover bg-white"
+                                    />
+                                ) : (
+                                    <div className="h-24 w-24 rounded-full bg-gray-200 border-4 border-white shadow-lg flex items-center justify-center text-3xl font-bold text-gray-400">
+                                        {perfil.name.charAt(0).toUpperCase()}
+                                    </div>
+                                )}
                             </div>
-                        ) : (
-                            <ul className="divide-y divide-gray-200">
-                                {isLoading && <p className="text-blue-500 font-semibold mb-4">Carregando usuários...</p>}
-                                {isError && <p className="text-red-500 font-semibold mb-4">Erro ao carregar os dados.</p>}
 
-                                {listaUsuarios?.map((usuario) => (
-                                    <li key={usuario._id} className="py-4 flex items-center hover:bg-gray-50 transition-colors px-2 rounded -mx-2">
+                            <div className="text-center">
+                                <h2 className="text-2xl font-bold text-gray-900">{perfil.name}</h2>
+                                <p className="text-gray-500 mb-6">{perfil.email}</p>
 
-                                        <div className="flex-shrink-0 mr-4">
-                                            {usuario.avatar ? (
-                                                <img
-                                                    src={usuario.avatar}
-                                                    alt={`Avatar de ${usuario.name}`}
-                                                    className="h-12 w-12 rounded-full object-cover border border-gray-200 shadow-sm"
-                                                />
-                                            ) : (
-                                                <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold border border-gray-300 shadow-sm">
-                                                    {usuario.name.charAt(0).toUpperCase()}
-                                                </div>
-                                            )}
-                                        </div>
+                                <form onSubmit={handleAdicionarLink} className="mt-6 space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm text-left">
+                                    <div>
+                                        <input
+                                            type="text"
+                                            placeholder="Título (ex: Meu GitHub)"
+                                            value={novoTitulo}
+                                            onChange={(e) => setNovoTitulo(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-gray-700"
+                                        />
+                                    </div>
+                                    <div>
+                                        <input
+                                            type="url"
+                                            placeholder="URL (ex: https://github.com/tharcio09)"
+                                            value={novaUrl}
+                                            onChange={(e) => setNovaUrl(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-gray-700"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        disabled={mutacaoAdicionarLink.isPending}
+                                        className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                                    >
+                                        {mutacaoAdicionarLink.isPending ? 'Adicionando...' : 'Adicionar Link'}
+                                    </button>
+                                </form>
 
-                                        <div className="flex-1">
-                                            <p className="text-sm font-medium text-gray-900">{usuario.name}</p>
-                                            <p className="text-sm text-gray-500">{usuario.email}</p>
-                                        </div>
-
-                                        <div className="flex items-center space-x-4">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Ativo
-                                            </span>
-                                            <button
-                                                onClick={() => mutacaoExcluir.mutate(usuario._id)}
-                                                disabled={mutacaoExcluir.isPending}
-                                                className="text-red-500 font-bold hover:text-red-700 disabled:opacity-50"
+                                <div className="space-y-3 mt-6">
+                                    {perfil.links && perfil.links.length > 0 ? (
+                                        perfil.links.map((link, index) => (
+                                            <a
+                                                key={index}
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="block w-full p-4 bg-white border border-gray-200 rounded-xl text-center font-semibold text-gray-700 hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition-all shadow-sm"
                                             >
-                                                {mutacaoExcluir.isPending ? 'Excluindo...' : 'Excluir'}
-                                            </button>
+                                                {link.titulo}
+                                            </a>
+                                        ))
+                                    ) : (
+                                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-gray-400 italic shadow-sm text-center">
+                                            Nenhum link adicionado ainda.
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                )}
             </main>
         </div>
     );
