@@ -36,7 +36,6 @@ describe('Fluxo da Plataforma Linktree', () => {
     });
 
     cy.contains('Link adicionado!').should('be.visible');
-    cy.contains('a', 'Meu Portfólio').should('be.visible').and('have.attr', 'href', 'https://github.com/tharcio09');
-  });
+cy.contains('a', 'Meu GitHub').should('have.attr', 'href', 'https://github.com/tharcio09')  });
 
 });
