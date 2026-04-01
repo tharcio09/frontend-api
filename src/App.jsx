@@ -4,6 +4,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Cadastro } from './pages/Cadastro';
 import { RotaPrivada } from './components/RotaPrivada';
 import { Toaster } from 'react-hot-toast';
+import { PerfilPublico } from './pages/PerfilPublico';
 
 export function App() {
   return (
@@ -14,6 +15,7 @@ export function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/dashboard" element={<RotaPrivada><Dashboard /></RotaPrivada>} />
         <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/p/:id" element={<PerfilPublico />} />
       </Routes>
     </BrowserRouter>
   )
