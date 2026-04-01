@@ -1,40 +1,35 @@
-# Aplicação Front-end: Autenticação JWT & Dashboard
+# DevLinks: Plataforma de Perfil e Linktree
 
 [![Pipeline E2E](https://github.com/tharcio09/frontend-api/actions/workflows/cypress.yml/badge.svg)](https://github.com/tharcio09/frontend-api/actions)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=React_Query&logoColor=white)
-![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white)
-![React Hot Toast](https://img.shields.io/badge/React_Hot_Toast-F9F9E3?style=for-the-badge&logo=react&logoColor=black)
 ![React Hot Toast](https://img.shields.io/badge/React_Hot_Toast-F9F9E3?style=for-the-badge&logo=react&logoColor=black)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=Cloudinary&logoColor=white)
+![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white)
 
-Uma Single Page Application (SPA) robusta e moderna, desenvolvida para demonstrar o consumo seguro de uma API RESTful. 
+Uma Single Page Application (SPA) Full-Stack desenvolvida para a criação e gerenciamento de páginas de links personalizadas (estilo Linktree). 
 
-Este projeto atua como a camada visual de um ecossistema Full-Stack, cobrindo o ciclo completo de autenticação: desde o cadastro e login, gerenciamento de rotas privadas com Tokens JWT, até o controle de estado global e cache de dados com React Query, garantindo alta performance e resiliência.
+Este projeto atua como um produto SaaS completo, demonstrando o domínio do ecossistema JavaScript. Ele divide a arquitetura entre **Bastidores (Área Administrativa Privada)** e **Palco (Perfil Público)**, cobrindo o ciclo ponta a ponta: autenticação segura, gestão de estado global, upload de arquivos pesados para CDN e proteção de rotas.
 
 ---
 
 ## Links de Produção
 
 * **Live Demo (Front-end):** [Acesse a aplicação na Vercel](https://frontend-api-weld.vercel.app/)
-* **Back-end API (Render):** `https://minha-api-lih7.onrender.com`
 * **Banco de Dados:** MongoDB Atlas
 
 ---
 
 ## O que foi implementado neste projeto
 
-* **Integração Contínua (CI/CD):** Pipeline automatizada com GitHub Actions rodando testes E2E do Cypress a cada *push* na *main*, garantindo que quebras de código não cheguem em produção.
-* **Gerenciamento Avançado de Estado e Cache:** Substituição do padrão tradicional de `useEffect`/`useState` pelo **TanStack Query (React Query)**, proporcionando cache de dados, tratamento de *loading/error* nativo e atualizações instantâneas de tela via Mutações (`useMutation`).
-* **Autenticação de Ponta a Ponta:** * Captura e envio seguro de credenciais.
-  * Armazenamento seguro do Token JWT.
-  * Injeção automática do Token via Header (`Authorization: Bearer`) e tratamento de sessão expirada (Erro 401).
-* **Rotas Privadas (Protected Routes):** Componente Wrapper (`<RotaPrivada>`) que intercepta usuários não autenticados e redireciona para o Login instantaneamente.
-* **Ciclo CRUD Completo:** Criação (Sign Up), Leitura (Listagem protegida) e Exclusão de dados conectados ao banco de dados real.
-* * **Feedback Visual Avançado:** Substituição de alertas nativos bloqueantes por notificações globais e assíncronas (Toasts), garantindo uma navegação fluida e UX de alto nível.
-* * **Upload de Imagens e Integração com CDN:** Manipulação de arquivos pesados no Front-end utilizando a interface nativa `FormData`. Comunicação ponta a ponta com a API (Node.js + Multer) para processamento e hospedagem de imagens na nuvem através do **Cloudinary** (CDN), com invalidação de cache inteligente via React Query para exibir o novo avatar em tempo real.
+* **Arquitetura Palco/Bastidores:** Separação clara entre o Dashboard de gestão (protegido por JWT, onde o usuário edita seus dados e links) e a página de perfil pública (`/p/:id`), acessível a qualquer pessoa na internet de forma segura.
+* **Integração Contínua (CI/CD):** Pipeline automatizada com GitHub Actions rodando testes E2E do Cypress a cada *push* na *main*, garantindo a integridade dos fluxos críticos antes de chegarem em produção.
+* **Upload de Imagens e Integração com CDN:** Manipulação de arquivos pesados no Front-end utilizando a interface nativa `FormData`. Comunicação ponta a ponta com a API (Node.js + Multer) para processamento e hospedagem de avatares na nuvem através do **Cloudinary** (CDN).
+* **Gerenciamento Avançado de Estado e Cache:** Substituição do padrão tradicional de estado pelo **TanStack Query (React Query)**. Proporciona cache de dados e invalidação inteligente após mutações (como adicionar um novo link ou foto), atualizando a tela em tempo real.
+* **Autenticação de Ponta a Ponta:** Captura e envio seguro de credenciais, armazenamento de Token JWT e proteção de rotas através de um componente Wrapper (`<RotaPrivada>`).
+* **Feedback Visual Avançado:** Uso de notificações globais e assíncronas (Toasts), garantindo uma navegação fluida e UX de alto nível.
 
 ---
 
@@ -44,13 +39,13 @@ Este projeto atua como a camada visual de um ecossistema Full-Stack, cobrindo o 
 Interface responsiva e moderna para captura de credenciais.
 ![Tela de Login](./docs/tela-login.PNG)
 
-### Tela de Cadastro (Sign Up)
-Formulário integrado com a rota pública da API para criação de novas contas diretamente pelo sistema.
-![Tela de Cadastro](./docs/tela-cadastro.PNG)
+### Bastidores: Dashboard (Rota Privada)
+Painel administrativo acessível apenas com Token JWT válido. Permite o upload dinâmico de avatar e a adição de novos links na vitrine.
+![Tela do Dashboard](./docs/tela-dashboard.PNG)
 
-### Dashboard (Rota Privada)
-Painel administrativo acessível apenas com Token JWT válido. Utiliza React Query para garantir que os dados estejam sempre atualizados sem recarregar a página. Conta com funcionalidade de **Upload de Avatar**, enviando a imagem para a nuvem e atualizando a interface instantaneamente.
-![Tela do Dashboard com Avatar](./docs/tela-dashboard.PNG)
+### Palco: Perfil Público (Rota Pública)
+A página oficial do usuário gerada dinamicamente, otimizada e segura, pronta para ser compartilhada em redes sociais.
+![Tela do Perfil Público](./docs/tela-perfil-publico.PNG)
 
 ---
 
@@ -58,7 +53,7 @@ Painel administrativo acessível apenas com Token JWT válido. Utiliza React Que
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/tharcio09/frontend-api.git
+   git clone [https://github.com/tharcio09/frontend-api.git](https://github.com/tharcio09/frontend-api.git)
    ```
 2. Instale as dependências:
    ```bash
@@ -67,7 +62,7 @@ Painel administrativo acessível apenas com Token JWT válido. Utiliza React Que
 3. Configure as Variáveis de Ambiente:
    Crie um arquivo `.env` na raiz do projeto e aponte para a sua API (local ou em nuvem):
    ```env
-   VITE_API_URL=https://minha-api-lih7.onrender.com
+   VITE_API_URL=http://localhost:3000
    ```
 4. Inicie o servidor de desenvolvimento:
    ```bash
@@ -77,4 +72,3 @@ Painel administrativo acessível apenas com Token JWT válido. Utiliza React Que
    ```bash
    npx cypress open
    ```
-
