@@ -3,6 +3,7 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Cadastro } from './pages/Cadastro';
 import { RotaPrivada } from './components/RotaPrivada';
+import { PublicProfile } from './components/PublicProfile';
 import { Toaster } from 'react-hot-toast';
 import { PerfilPublico } from './pages/PerfilPublico';
 
@@ -16,6 +17,7 @@ export function App() {
         <Route path="/dashboard" element={<RotaPrivada><Dashboard /></RotaPrivada>} />
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="/p/:id" element={<PerfilPublico />} />
+        <Route path="/:username" element={<PublicProfile />} />
       </Routes>
     </BrowserRouter>
   )
