@@ -17,7 +17,7 @@ export function App() {
         <Route path="/dashboard" element={<RotaPrivada><Dashboard /></RotaPrivada>} />
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="/p/:id" element={<PerfilPublico />} />
-        <Route path="/:username" element={<PublicProfile />} />
+        <Route path="/p/:username" element={<PublicProfile />} />
       </Routes>
     </BrowserRouter>
   )
