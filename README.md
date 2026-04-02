@@ -15,32 +15,32 @@ Este projeto atua como um produto SaaS completo, demonstrando o domínio do ecos
 
 ---
 
-## Links de Produção
+## 🔗 Links do Projeto
 
 * **Live Demo (Front-end):** [Acesse a aplicação na Vercel](https://frontend-api-weld.vercel.app/)
-* **Banco de Dados:** MongoDB Atlas
+* **Repositório da API (Back-end):** [Acesse o código em Node.js/Express aqui](https://github.com/tharcio09/SEU-REPO-BACKEND-AQUI)
 
 ---
 
-## O que foi implementado neste projeto
+## 🚀 O que foi implementado neste projeto
 
 * **Arquitetura Palco/Bastidores:** Separação clara entre o Dashboard de gestão (protegido por JWT, onde o usuário edita seus dados e links) e a página de perfil pública (`/p/:id`), acessível a qualquer pessoa na internet de forma segura.
-* **Integração Contínua (CI/CD):** Pipeline automatizada com GitHub Actions rodando testes E2E do Cypress a cada *push* na *main*, garantindo a integridade dos fluxos críticos antes de chegarem em produção.
+* **Integração Contínua (CI/CD):** Pipeline automatizada com GitHub Actions rodando testes E2E do Cypress a cada *push* na *main*, garantindo a integridade dos fluxos críticos antes de chegarem em produção. O pipeline conta com rotinas de *teardown* para limpeza de dados de teste.
 * **Upload de Imagens e Integração com CDN:** Manipulação de arquivos pesados no Front-end utilizando a interface nativa `FormData`. Comunicação ponta a ponta com a API (Node.js + Multer) para processamento e hospedagem de avatares na nuvem através do **Cloudinary** (CDN).
-* **Gerenciamento Avançado de Estado e Cache:** Substituição do padrão tradicional de estado pelo **TanStack Query (React Query)**. Proporciona cache de dados e invalidação inteligente após mutações (como adicionar um novo link ou foto), atualizando a tela em tempo real.
+* **Gerenciamento Avançado de Estado e Cache:** Substituição do padrão tradicional de estado pelo **TanStack Query (React Query)**. Proporciona cache de dados e invalidação inteligente após mutações (adição e exclusão de links ou fotos), atualizando a interface gráfica em tempo real sem recarregar a página.
 * **Autenticação de Ponta a Ponta:** Captura e envio seguro de credenciais, armazenamento de Token JWT e proteção de rotas através de um componente Wrapper (`<RotaPrivada>`).
-* **Feedback Visual Avançado:** Uso de notificações globais e assíncronas (Toasts), garantindo uma navegação fluida e UX de alto nível.
+* **UX e Feedback Visual:** Uso de notificações globais assíncronas (Toasts), recurso nativo de "Copiar para Área de Transferência" da API do navegador, e design responsivo com Tailwind CSS para garantir uma navegação fluida em qualquer dispositivo.
 
 ---
 
-## Preview da Aplicação
+## 📱 Preview da Aplicação
 
 ### Tela de Login
 Interface responsiva e moderna para captura de credenciais.
 ![Tela de Login](./docs/tela-login.PNG)
 
 ### Bastidores: Dashboard (Rota Privada)
-Painel administrativo acessível apenas com Token JWT válido. Permite o upload dinâmico de avatar e a adição de novos links na vitrine.
+Painel administrativo acessível apenas com Token JWT válido. Permite o upload dinâmico de avatar, gestão da vitrine de links e cópia rápida da URL pública.
 ![Tela do Dashboard](./docs/tela-dashboard.PNG)
 
 ### Palco: Perfil Público (Rota Pública)
@@ -49,7 +49,7 @@ A página oficial do usuário gerada dinamicamente, otimizada e segura, pronta p
 
 ---
 
-## Como rodar o projeto localmente
+## 💻 Como rodar o projeto localmente
 
 1. Clone este repositório:
    ```bash
@@ -60,7 +60,7 @@ A página oficial do usuário gerada dinamicamente, otimizada e segura, pronta p
    npm install
    ```
 3. Configure as Variáveis de Ambiente:
-   Crie um arquivo `.env` na raiz do projeto e aponte para a sua API (local ou em nuvem):
+   Crie um arquivo `.env` na raiz do projeto e aponte para a sua API (local ou em nuvem). Você pode usar o `.env.example` como base:
    ```env
    VITE_API_URL=http://localhost:3000
    ```
