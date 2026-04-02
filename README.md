@@ -15,14 +15,14 @@ Este projeto atua como um produto SaaS completo, demonstrando o domínio do ecos
 
 ---
 
-## 🔗 Links do Projeto
+## Links do Projeto
 
 * **Live Demo (Front-end):** [Acesse a aplicação na Vercel](https://frontend-api-weld.vercel.app/)
 * **Repositório da API (Back-end):** [Acesse o código em Node.js/Express aqui](https://github.com/tharcio09/minha-api)
 
 ---
 
-## 🚀 O que foi implementado neste projeto
+## O que foi implementado neste projeto
 
 * **Arquitetura Palco/Bastidores:** Separação clara entre o Dashboard de gestão (protegido por JWT, onde o usuário edita seus dados e links) e a página de perfil pública (`/p/:id`), acessível a qualquer pessoa na internet de forma segura.
 * **Integração Contínua (CI/CD):** Pipeline automatizada com GitHub Actions rodando testes E2E do Cypress a cada *push* na *main*, garantindo a integridade dos fluxos críticos antes de chegarem em produção. O pipeline conta com rotinas de *teardown* para limpeza de dados de teste.
@@ -33,7 +33,7 @@ Este projeto atua como um produto SaaS completo, demonstrando o domínio do ecos
 
 ---
 
-## 📱 Preview da Aplicação
+## Preview da Aplicação
 
 ### Tela de Login
 Interface responsiva e moderna para captura de credenciais.
@@ -49,7 +49,7 @@ A página oficial do usuário gerada dinamicamente, otimizada e segura, pronta p
 
 ---
 
-## 💻 Como rodar o projeto localmente
+## Como rodar o projeto localmente
 
 1. Clone este repositório:
    ```bash
