@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { api } from '../services/api';
 
 export function Cadastro() {
     const [nome, setNome] = useState('');
@@ -12,22 +13,13 @@ export function Cadastro() {
         e.preventDefault();
 
         try {
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: nome, email, password })
-            });
+            await api.post('/usuario', { name: nome, email, password });
 
-            if (resposta.ok) {
-                toast.success("Conta criada com sucesso! Você já pode fazer login.");
-                navigate('/');
-            } else {
-                const dados = await resposta.json();
-                toast.error("Erro ao criar conta: " + dados.message);
-            }
+            toast.success("Conta criada com sucesso! Você já pode fazer login.");
+            navigate('/');
+
         } catch (error) {
-            console.error("Erro na requisição:", error);
-            alert("Erro ao conectar com o servidor.");
+            console.error("Erro capturado no componente:", error);
         }
     };
 

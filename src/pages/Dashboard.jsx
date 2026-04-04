@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { api } from '../services/api';
 
 export function Dashboard() {
     const navigate = useNavigate();
@@ -10,20 +11,9 @@ export function Dashboard() {
     const { data: perfil, isLoading, isError } = useQuery({
         queryKey: ['meu-perfil'],
         queryFn: async () => {
-            const token = localStorage.getItem('meu_token_vip');
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/meu-perfil`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (!resposta.ok) {
-                if (resposta.status === 401) {
-                    localStorage.removeItem('meu_token_vip');
-                    navigate('/');
-                    throw new Error('Sessão expirada. Faça login novamente.');
-                }
-                throw new Error('Falha ao buscar seu perfil');
-            }
-            return resposta.json();
+            // O Axios + Interceptor já cuida do Token e do erro 401 (se você configurar no ralo)
+            const { data } = await api.get('/meu-perfil');
+            return data;
         },
         retry: false
     });
@@ -35,28 +25,18 @@ export function Dashboard() {
 
     const mutacaoUploadFoto = useMutation({
         mutationFn: async (arquivo) => {
-            const token = localStorage.getItem('meu_token_vip');
             const formData = new FormData();
             formData.append('foto', arquivo);
 
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario/foto`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            if (!resposta.ok) throw new Error('Erro ao enviar a foto');
-            return resposta.json();
+            // O Axios entende FormData e já configura o Content-Type sozinho
+            const { data } = await api.patch('/usuario/foto', formData);
+            return data;
         },
         onSuccess: (dados) => {
             queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
             toast.success(dados.message || 'Sua foto foi atualizada!');
-        },
-        onError: (erro) => {
-            toast.error(`Erro: ${erro.message}`);
         }
+        // onError removido: o interceptor já dispara o toast!
     });
 
     const lidarComEscolhaDeFoto = (evento) => {
@@ -68,25 +48,12 @@ export function Dashboard() {
 
     const mutacaoAdicionarLink = useMutation({
         mutationFn: async (novoLink) => {
-            const token = localStorage.getItem('meu_token_vip');
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario/link`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(novoLink)
-            });
-
-            if (!resposta.ok) throw new Error('Erro ao adicionar o link');
-            return resposta.json();
+            const { data } = await api.post('/usuario/link', novoLink);
+            return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
             toast.success('Link adicionado!');
-        },
-        onError: (erro) => {
-            toast.error(erro.message);
         }
     });
 
@@ -107,25 +74,12 @@ export function Dashboard() {
 
     const mutacaoDeletarLink = useMutation({
         mutationFn: async (idDoLink) => {
-            const token = localStorage.getItem('meu_token_vip');
-            // ATENÇÃO: Confirme se a URL do seu backend para deletar o link é exatamente essa!
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/usuario/link/${idDoLink}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!resposta.ok) throw new Error('Erro ao excluir o link');
-            return resposta.json();
+            const { data } = await api.delete(`/usuario/link/${idDoLink}`);
+            return data;
         },
         onSuccess: () => {
-            // Atualiza a tela automaticamente
             queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
             toast.success('Link excluído com sucesso! 🗑️');
-        },
-        onError: (erro) => {
-            toast.error(`Erro: ${erro.message}`);
         }
     });
 

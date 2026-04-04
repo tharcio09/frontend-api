@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { api } from '../services/api';
 
 export function Login() {
     const [email, setEmail] = useState('');
@@ -12,25 +13,14 @@ export function Login() {
         e.preventDefault();
 
         try {
-            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password })
-            });
+            const { data } = await api.post('/login', { email, password });
 
-            const dados = await resposta.json();
-
-            if (resposta.ok) {
-                localStorage.setItem('meu_token_vip', dados.token);
-                navigate('/dashboard');
-            } else {
-                toast.error("Erro no login: " + dados.message);
-            }
+            localStorage.setItem('meu_token_vip', data.token);
+            toast.success("Login realizado com sucesso!");
+            navigate('/dashboard');
 
         } catch (error) {
-            console.error("Erro na requisição:", error);
+            console.error("Erro capturado no componente:", error);
         }
     };
 
