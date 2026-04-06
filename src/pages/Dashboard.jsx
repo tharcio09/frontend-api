@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
+import { SkeletonDashboard } from '../components/SkeletonDashboard';
 
 export function Dashboard() {
     const navigate = useNavigate();
@@ -11,7 +12,6 @@ export function Dashboard() {
     const { data: perfil, isLoading, isError } = useQuery({
         queryKey: ['meu-perfil'],
         queryFn: async () => {
-            // O Axios + Interceptor já cuida do Token e do erro 401 (se você configurar no ralo)
             const { data } = await api.get('/meu-perfil');
             return data;
         },
@@ -28,7 +28,6 @@ export function Dashboard() {
             const formData = new FormData();
             formData.append('foto', arquivo);
 
-            // O Axios entende FormData e já configura o Content-Type sozinho
             const { data } = await api.patch('/usuario/foto', formData);
             return data;
         },
@@ -36,7 +35,6 @@ export function Dashboard() {
             queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
             toast.success(dados.message || 'Sua foto foi atualizada!');
         }
-        // onError removido: o interceptor já dispara o toast!
     });
 
     const lidarComEscolhaDeFoto = (evento) => {
@@ -127,10 +125,18 @@ export function Dashboard() {
                 </div>
             </nav>
 
+
+
             <main className="max-w-md mx-auto py-12 px-4 sm:px-6">
 
-                {isLoading && <p className="text-center text-blue-500 font-semibold">Carregando seu perfil...</p>}
-                {isError && <p className="text-center text-red-500 font-semibold">Erro ao carregar perfil.</p>}
+                {isLoading && <SkeletonDashboard />}
+
+                {isError && (
+                    <div className="text-center py-10">
+                        <p className="text-red-500 font-semibold">Ops! Não conseguimos carregar seu perfil.</p>
+                        <button onClick={() => window.location.reload()} className="text-blue-600 underline">Tentar novamente</button>
+                    </div>
+                )}
 
                 {!isLoading && !isError && perfil && (
                     <>
