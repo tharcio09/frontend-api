@@ -29,7 +29,7 @@ Este projeto atua como um produto SaaS completo, demonstrando o domínio do ecos
 * **Upload de Imagens e Integração com CDN:** Manipulação de arquivos pesados no Front-end utilizando a interface nativa `FormData`. Comunicação ponta a ponta com a API (Node.js + Multer) para processamento e hospedagem de avatares na nuvem através do **Cloudinary** (CDN).
 * **Gerenciamento Avançado de Estado e Cache:** Substituição do padrão tradicional de estado pelo **TanStack Query (React Query)**. Proporciona cache de dados e invalidação inteligente após mutações (adição e exclusão de links ou fotos), atualizando a interface gráfica em tempo real sem recarregar a página.
 * **Autenticação de Ponta a Ponta:** Captura e envio seguro de credenciais, armazenamento de Token JWT e proteção de rotas através de um componente Wrapper (`<RotaPrivada>`).
-* **UX e Feedback Visual:** Uso de notificações globais assíncronas (Toasts), recurso nativo de "Copiar para Área de Transferência" da API do navegador, e design responsivo com Tailwind CSS para garantir uma navegação fluida em qualquer dispositivo.
+* **UX, Feedback Visual e Perceived Performance:** Aplicação de **Skeleton Screens** que simulam o layout real e evitam pulos na tela durante os estados de *loading*, oferecendo uma sensação de carregamento instantâneo. Uso de notificações globais assíncronas (Toasts), recurso nativo de "Copiar para Área de Transferência" da API do navegador e design perfeitamente responsivo construído com Tailwind CSS.
 
 ---
 
