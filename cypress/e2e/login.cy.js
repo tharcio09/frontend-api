@@ -12,9 +12,9 @@ describe('Fluxo da Plataforma Linktree', () => {
       expect(interceptacao.response.statusCode).to.eq(200);
     });
     cy.url().should('include', '/dashboard');
-    cy.contains('$ devlinks').should('be.visible');
-    cy.contains('mudar foto').should('be.visible');
-    cy.contains('button', '+ adicionar').should('be.visible');
+    cy.contains('DevLinks').should('be.visible');
+    cy.contains('Trocar Foto').should('exist');
+    cy.contains('button', 'Adicionar Link').should('be.visible');
   });
 
   it('Deve adicionar e depois excluir um novo link com sucesso no perfil', () => {
@@ -36,15 +36,15 @@ describe('Fluxo da Plataforma Linktree', () => {
     const tituloTeste = 'Link Automatizado Cypress';
 
     // 2. Criacao do Link
-    cy.get('input[placeholder*="titulo"]').type(tituloTeste);
-    cy.get('input[placeholder*="url"]').type('https://github.com/tharciosantos');
-    cy.contains('button', '+ adicionar').click();
+    cy.get('input[placeholder*="Título"]').type(tituloTeste);
+    cy.get('input[placeholder*="github.com"]').type('https://github.com/tharciosantos');
+    cy.contains('button', 'Adicionar Link').click();
 
     cy.wait('@criacaoDeLink').then((interceptacao) => {
       expect(interceptacao.response.statusCode).to.eq(201);
     });
 
-    cy.contains('Link adicionado!').should('be.visible');
+    cy.contains('Link adicionado com sucesso!').should('be.visible');
     cy.contains(tituloTeste).should('be.visible');
 
     // ---------------------------------------------------------
@@ -54,11 +54,11 @@ describe('Fluxo da Plataforma Linktree', () => {
     // O Cypress aceita automaticamente alertas/confirmacoes do navegador
     cy.on('window:confirm', () => true);
 
-    // Acha exatamente o link que acabamos de criar e clica no x
+    // Acha exatamente o link que acabamos de criar e clica em Excluir
     cy.contains(tituloTeste)
-      .parent()
+      .closest('.border')
       .find('button')
-      .contains('x')
+      .contains('Excluir')
       .click();
 
     // 4. Validacao da Exclusao
@@ -66,7 +66,7 @@ describe('Fluxo da Plataforma Linktree', () => {
       expect(interceptacao.response.statusCode).to.eq(200);
     });
 
-    cy.contains('Link excluido com sucesso!').should('be.visible');
+    cy.contains('Link excluído com sucesso!').should('be.visible');
 
     // Garantimos que o link de teste realmente sumiu da tela
     cy.contains(tituloTeste).should('not.exist');
