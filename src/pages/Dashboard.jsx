@@ -62,7 +62,7 @@ export function Dashboard() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
-            toast.success('Link adicionado!');
+            toast.success('Link adicionado com sucesso!');
         }
     });
 
@@ -84,15 +84,15 @@ export function Dashboard() {
     const handleAdicionarLink = (e) => {
         e.preventDefault();
 
-        if (!novoTitulo || !novaUrl) {
-            return toast.error('Preencha o titulo e a URL!');
+        if (!novoTitulo.trim() || !novaUrl.trim()) {
+            return toast.error('Preencha o título e a URL!');
         }
 
         if (!urlSegura(novaUrl)) {
-            return toast.error('URL invalida. Use http:// ou https://');
+            return toast.error('URL inválida. Use http:// ou https://');
         }
 
-        mutacaoAdicionarLink.mutate({ titulo: novoTitulo, url: novaUrl });
+        mutacaoAdicionarLink.mutate({ titulo: novoTitulo.trim(), url: novaUrl.trim() });
 
         setNovoTitulo('');
         setNovaUrl('');
@@ -105,273 +105,299 @@ export function Dashboard() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meu-perfil'] });
-            toast.success('Link excluido com sucesso!');
+            toast.success('Link excluído com sucesso!');
         }
     });
 
     const idDoUsuarioLogado = perfil?._id || perfil?.id;
-
     const meuLinkPublico = idDoUsuarioLogado ? `${window.location.origin}/p/${idDoUsuarioLogado}` : '';
 
     const copiarLink = async () => {
         try {
             await navigator.clipboard.writeText(meuLinkPublico);
-            toast.success('Link copiado para a area de transferencia!', { id: 'copiar-link' });
+            toast.success('Link copiado para a área de transferência!', { id: 'copiar-link' });
         } catch (err) {
             console.error('Erro ao copiar o link: ', err);
-            toast.error('Nao foi possivel copiar o link.', { id: 'copiar-link' });
+            toast.error('Não foi possível copiar o link.', { id: 'copiar-link' });
         }
     };
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
-            {/* Nav */}
-            <nav style={{ backgroundColor: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border-default)' }}>
-                <div className="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <span className="text-lg font-bold" style={{ color: 'var(--color-accent)' }}>
-                        $ devlinks
-                    </span>
+            {/* Top Navigation */}
+            <header className="border-b border-[var(--color-border-default)]" style={{ backgroundColor: 'var(--color-bg-surface)' }}>
+                <div className="max-w-4xl mx-auto px-4 py-3.5 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <span className="text-lg">🔗</span>
+                        <span className="text-base font-bold tracking-tight" style={{ color: 'var(--color-accent)' }}>
+                            DevLinks
+                        </span>
+                    </div>
 
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
-                        <label
-                            className={`cursor-pointer text-xs px-3 py-2 border rounded-none transition-colors ${
-                                mutacaoUploadFoto.isPending
-                                    ? 'opacity-50 cursor-not-allowed'
-                                    : 'hover:border-[var(--color-accent-alt)]'
-                            }`}
-                            style={{
-                                color: 'var(--color-text-secondary)',
-                                borderColor: 'var(--color-border-default)',
-                            }}
-                        >
-                            {mutacaoUploadFoto.isPending ? '// enviando...' : '> mudar foto'}
-                            <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={lidarComEscolhaDeFoto}
-                                disabled={mutacaoUploadFoto.isPending}
-                            />
-                        </label>
+                    <div className="flex items-center gap-3">
+                        {meuLinkPublico && (
+                            <a
+                                href={meuLinkPublico}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--color-border-default)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                                style={{ color: 'var(--color-text-secondary)' }}
+                            >
+                                <span>Ver perfil público</span>
+                                <span>↗</span>
+                            </a>
+                        )}
 
                         <button
                             onClick={handleLogout}
-                            className="text-xs px-3 py-2 border rounded-none transition-colors hover:border-[var(--color-error)]"
-                            style={{
-                                color: 'var(--color-error)',
-                                borderColor: 'var(--color-border-default)',
-                            }}
+                            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--color-border-default)] transition-colors hover:border-[var(--color-error)] hover:text-[var(--color-error)] cursor-pointer"
+                            style={{ color: 'var(--color-text-muted)' }}
                         >
-                            {'>'} sair
+                            Sair
                         </button>
                     </div>
                 </div>
-            </nav>
+            </header>
 
-            {/* Main */}
-            <main className="max-w-xl mx-auto py-6 sm:py-12 px-4">
-
+            {/* Main Content */}
+            <main className="max-w-3xl mx-auto py-8 sm:py-12 px-4 space-y-8">
                 {isLoading && <SkeletonDashboard />}
 
                 {isError && (
-                    <div className="text-center py-16">
-                        <p className="text-sm mb-4" style={{ color: 'var(--color-error)' }}>
-                            {'// erro: nao foi possivel carregar seu perfil'}
+                    <div className="text-center py-16 p-8 border border-[var(--color-border-default)] rounded-xl" style={{ backgroundColor: 'var(--color-bg-surface)' }}>
+                        <p className="text-sm font-semibold mb-4" style={{ color: 'var(--color-error)' }}>
+                            Não foi possível carregar seu perfil.
                         </p>
                         <button
                             onClick={() => window.location.reload()}
-                            className="text-sm transition-colors hover:underline"
-                            style={{ color: 'var(--color-accent-alt)' }}
+                            className="text-xs font-bold px-4 py-2 rounded-lg cursor-pointer transition-opacity hover:opacity-90"
+                            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-bg-primary)' }}
                         >
-                            {'>'} tentar novamente
+                            Tentar novamente
                         </button>
                     </div>
                 )}
 
                 {!isLoading && !isError && perfil && (
                     <>
-                        {/* Link Publico */}
-                        <div
-                            className="p-4 mb-8 flex flex-col sm:flex-row justify-between items-center gap-4"
-                            style={{
-                                backgroundColor: 'var(--color-bg-surface)',
-                                border: '1px solid var(--color-accent)',
-                            }}
-                        >
-                            <p className="text-xs text-center sm:text-left" style={{ color: 'var(--color-text-secondary)' }}>
-                                {'> perfil publico:'}
-                                <br />
-                                <a
-                                    href={meuLinkPublico}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="font-bold break-all transition-colors hover:underline"
-                                    style={{ color: 'var(--color-accent)' }}
-                                >
-                                    {meuLinkPublico}
-                                </a>
-                            </p>
-                            <button
-                                onClick={copiarLink}
-                                className="text-xs font-bold px-4 py-2 rounded-none transition-colors w-full sm:w-auto shrink-0"
-                                style={{
-                                    backgroundColor: 'var(--color-accent)',
-                                    color: 'var(--color-bg-primary)',
-                                }}
-                            >
-                                {'>'} copiar
-                            </button>
+                        {/* Header de Perfil */}
+                        <div className="p-6 sm:p-8 border border-[var(--color-border-default)] rounded-xl relative overflow-hidden" style={{ backgroundColor: 'var(--color-bg-surface)' }}>
+                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                                {/* Avatar com Botão de Troca */}
+                                <div className="relative group">
+                                    {perfil.avatar ? (
+                                        <img
+                                            src={perfil.avatar}
+                                            alt={`Avatar de ${perfil.name}`}
+                                            className="h-24 w-24 rounded-full object-cover border-2 border-[var(--color-accent)] shadow-md"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="h-24 w-24 rounded-full flex items-center justify-center text-3xl font-bold border-2 border-[var(--color-accent)] shadow-md"
+                                            style={{
+                                                backgroundColor: 'var(--color-bg-elevated)',
+                                                color: 'var(--color-accent)',
+                                            }}
+                                        >
+                                            {perfil.name.charAt(0).toUpperCase()}
+                                        </div>
+                                    )}
+
+                                    <label
+                                        className="absolute inset-0 rounded-full flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-[10px] font-bold text-white text-center p-1"
+                                    >
+                                        {mutacaoUploadFoto.isPending ? 'Enviando...' : 'Trocar Foto'}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={lidarComEscolhaDeFoto}
+                                            disabled={mutacaoUploadFoto.isPending}
+                                        />
+                                    </label>
+                                </div>
+
+                                {/* Informações do Usuário */}
+                                <div className="flex-1 text-center sm:text-left space-y-2">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                        <div>
+                                            <h1 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                                                {perfil.name}
+                                            </h1>
+                                            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                                                {perfil.email}
+                                            </p>
+                                        </div>
+
+                                        {/* Botão de Copiar Link */}
+                                        <button
+                                            onClick={copiarLink}
+                                            className="inline-flex items-center justify-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-lg transition-all cursor-pointer hover:opacity-90 self-center sm:self-start"
+                                            style={{
+                                                backgroundColor: 'var(--color-accent)',
+                                                color: 'var(--color-bg-primary)',
+                                            }}
+                                        >
+                                            <span>📋</span>
+                                            <span>Copiar Link Público</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Campo de Profissão / Bio */}
+                                    <div className="pt-2">
+                                        <label className="block text-[11px] font-semibold mb-1" style={{ color: 'var(--color-text-muted)' }}>
+                                            Sua especialidade ou cargo:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            placeholder="Ex: Desenvolvedor Full Stack"
+                                            defaultValue={perfil.profession || ''}
+                                            onBlur={handleSalvarProfissao}
+                                            className="w-full max-w-sm px-3 py-1.5 text-xs border rounded-lg transition-colors focus:border-[var(--color-accent)]"
+                                            style={{
+                                                backgroundColor: 'var(--color-bg-primary)',
+                                                color: 'var(--color-text-primary)',
+                                                borderColor: 'var(--color-border-default)',
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Perfil */}
-                        <div
-                            className="p-4 sm:p-6 mb-8"
-                            style={{
-                                backgroundColor: 'var(--color-bg-surface)',
-                                border: '1px solid var(--color-border-default)',
-                            }}
-                        >
-                            {/* Avatar */}
-                            <div className="flex justify-center mb-6">
-                                {perfil.avatar ? (
-                                    <img
-                                        src={perfil.avatar}
-                                        alt={`Avatar de ${perfil.name}`}
-                                        className="h-20 w-20 object-cover"
-                                        style={{ border: '2px solid var(--color-accent)' }}
-                                    />
-                                ) : (
-                                    <div
-                                        className="h-20 w-20 flex items-center justify-center text-2xl font-bold"
-                                        style={{
-                                            backgroundColor: 'var(--color-bg-elevated)',
-                                            border: '2px solid var(--color-accent)',
-                                            color: 'var(--color-text-muted)',
-                                        }}
-                                    >
-                                        {perfil.name.charAt(0).toUpperCase()}
-                                    </div>
-                                )}
+                        {/* Formulário de Adicionar Link */}
+                        <div className="p-6 border border-[var(--color-border-default)] rounded-xl" style={{ backgroundColor: 'var(--color-bg-surface)' }}>
+                            <div className="mb-4">
+                                <h2 className="text-base font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                                    Adicionar Novo Link
+                                </h2>
+                                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                                    Insira o título da plataforma e a URL de destino
+                                </p>
                             </div>
 
-                            {/* Info */}
-                            <div className="text-center mb-6">
-                                <h2 className="text-xl font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                                    {perfil.name}
-                                </h2>
-                                <p className="text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>
-                                    {perfil.email}
-                                </p>
-
-                                {/* Campo Profissão */}
-                                <div className="flex items-center gap-2 justify-center">
+                            <form onSubmit={handleAdicionarLink} className="grid sm:grid-cols-[1fr_1.5fr_auto] gap-3">
+                                <div>
                                     <input
                                         type="text"
-                                        placeholder="sua profissão (ex: Desenvolvedor)"
-                                        defaultValue={perfil.profession || ''}
-                                        onBlur={handleSalvarProfissao}
-                                        className="px-3 py-1 text-xs border rounded-none transition-colors text-center max-w-[200px]"
+                                        placeholder="Título (ex: GitHub)"
+                                        value={novoTitulo}
+                                        onChange={(e) => setNovoTitulo(e.target.value)}
+                                        className="w-full px-3.5 py-2 text-sm border rounded-lg transition-colors focus:border-[var(--color-accent)]"
                                         style={{
                                             backgroundColor: 'var(--color-bg-primary)',
                                             color: 'var(--color-text-primary)',
                                             borderColor: 'var(--color-border-default)',
                                         }}
+                                        required
                                     />
                                 </div>
-                            </div>
 
-                            {/* Form Adicionar Link */}
-                            <form onSubmit={handleAdicionarLink} className="space-y-3">
-                                <p className="text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>
-                                    {'// adicionar link'}
-                                </p>
-                                <input
-                                    type="text"
-                                    placeholder="titulo (ex: Meu GitHub)"
-                                    value={novoTitulo}
-                                    onChange={(e) => setNovoTitulo(e.target.value)}
-                                    className="w-full px-4 py-3 text-sm border rounded-none transition-colors"
-                                    style={{
-                                        backgroundColor: 'var(--color-bg-primary)',
-                                        color: 'var(--color-text-primary)',
-                                    }}
-                                    required
-                                />
-                                <input
-                                    type="url"
-                                    placeholder="url (ex: https://github.com/user)"
-                                    value={novaUrl}
-                                    onChange={(e) => setNovaUrl(e.target.value)}
-                                    className="w-full px-4 py-3 text-sm border rounded-none transition-colors"
-                                    style={{
-                                        backgroundColor: 'var(--color-bg-primary)',
-                                        color: 'var(--color-text-primary)',
-                                    }}
-                                    required
-                                />
+                                <div>
+                                    <input
+                                        type="url"
+                                        placeholder="https://github.com/usuario"
+                                        value={novaUrl}
+                                        onChange={(e) => setNovaUrl(e.target.value)}
+                                        className="w-full px-3.5 py-2 text-sm border rounded-lg transition-colors focus:border-[var(--color-accent)]"
+                                        style={{
+                                            backgroundColor: 'var(--color-bg-primary)',
+                                            color: 'var(--color-text-primary)',
+                                            borderColor: 'var(--color-border-default)',
+                                        }}
+                                        required
+                                    />
+                                </div>
+
                                 <button
                                     type="submit"
                                     disabled={mutacaoAdicionarLink.isPending}
-                                    className="w-full py-3 text-sm font-bold rounded-none transition-colors disabled:opacity-50"
+                                    className="py-2 px-4 text-xs font-bold rounded-lg transition-all cursor-pointer hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-1 shrink-0"
                                     style={{
                                         backgroundColor: 'var(--color-accent)',
                                         color: 'var(--color-bg-primary)',
                                     }}
                                 >
-                                    {mutacaoAdicionarLink.isPending ? '// adicionando...' : '+ adicionar'}
+                                    {mutacaoAdicionarLink.isPending ? 'Salvando...' : '+ Adicionar Link'}
                                 </button>
                             </form>
                         </div>
 
-                        {/* Lista de Links */}
-                        <div>
-                            <p className="text-xs mb-4" style={{ color: 'var(--color-text-muted)' }}>
-                                {'// seus links'}
-                            </p>
-
-                            <div className="space-y-2">
-                                {perfil.links.map((link, index) => (
-                                    <div
-                                        key={link._id || index}
-                                        className="flex items-center gap-2 p-3 sm:p-4 border transition-all duration-150"
-                                        style={{
-                                            backgroundColor: 'var(--color-bg-surface)',
-                                            borderColor: 'var(--color-border-default)',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.borderColor = 'var(--color-accent)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.borderColor = 'var(--color-border-default)';
-                                        }}
-                                    >
-                                        <a
-                                            href={link.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex-1 text-sm font-bold transition-colors hover:underline"
-                                            style={{ color: 'var(--color-text-primary)' }}
-                                        >
-                                            {link.titulo}
-                                        </a>
-
-                                        <button
-                                            onClick={() => {
-                                                const idParaDeletar = link._id || link.id;
-                                                if (window.confirm("Tem certeza que deseja excluir este link?")) {
-                                                    mutacaoDeletarLink.mutate(idParaDeletar);
-                                                }
-                                            }}
-                                            disabled={mutacaoDeletarLink.isPending}
-                                            className="text-xs px-2 py-1 transition-colors hover:opacity-75 disabled:opacity-50"
-                                            style={{ color: 'var(--color-error)' }}
-                                            title="Excluir link"
-                                        >
-                                            x
-                                        </button>
-                                    </div>
-                                ))}
+                        {/* Lista de Links Cadastrados */}
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between px-1">
+                                <h3 className="text-sm font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                                    Seus Links ({perfil.links?.length || 0})
+                                </h3>
+                                <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                                    Ativos no seu perfil público
+                                </span>
                             </div>
+
+                            {perfil.links && perfil.links.length > 0 ? (
+                                <div className="grid gap-2.5">
+                                    {perfil.links.map((link, index) => (
+                                        <div
+                                            key={link._id || index}
+                                            className="flex items-center justify-between gap-4 p-4 border border-[var(--color-border-default)] rounded-xl transition-all hover:border-[var(--color-accent)]/60"
+                                            style={{ backgroundColor: 'var(--color-bg-surface)' }}
+                                        >
+                                            <div className="flex items-center gap-3 overflow-hidden">
+                                                <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--color-bg-elevated)', color: 'var(--color-accent)' }}>
+                                                    🔗
+                                                </div>
+                                                <div className="truncate">
+                                                    <a
+                                                        href={link.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-sm font-bold block truncate transition-colors hover:text-[var(--color-accent)]"
+                                                        style={{ color: 'var(--color-text-primary)' }}
+                                                    >
+                                                        {link.titulo}
+                                                    </a>
+                                                    <p className="text-[11px] truncate" style={{ color: 'var(--color-text-muted)' }}>
+                                                        {link.url}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                <a
+                                                    href={link.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs px-2.5 py-1 rounded border border-[var(--color-border-default)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                                                    style={{ color: 'var(--color-text-secondary)' }}
+                                                    title="Testar link em nova aba"
+                                                >
+                                                    Abrir ↗
+                                                </a>
+                                                <button
+                                                    onClick={() => {
+                                                        const idParaDeletar = link._id || link.id;
+                                                        if (window.confirm(`Tem certeza que deseja excluir o link "${link.titulo}"?`)) {
+                                                            mutacaoDeletarLink.mutate(idParaDeletar);
+                                                        }
+                                                    }}
+                                                    disabled={mutacaoDeletarLink.isPending}
+                                                    className="text-xs px-2.5 py-1 rounded border border-transparent transition-colors hover:border-[var(--color-error)] hover:bg-[var(--color-error)]/10 cursor-pointer disabled:opacity-50"
+                                                    style={{ color: 'var(--color-error)' }}
+                                                    title="Excluir link"
+                                                >
+                                                    Excluir
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-10 border border-dashed border-[var(--color-border-default)] rounded-xl" style={{ backgroundColor: 'var(--color-bg-surface)' }}>
+                                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                                        Você ainda não cadastrou nenhum link. Use o formulário acima para adicionar o primeiro!
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </>
                 )}
