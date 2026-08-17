@@ -15,50 +15,48 @@ export function PerfilPublicoView({ perfil, nomeFallback }) {
         return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
     };
 
-    const nome = perfil?.name || nomeFallback || 'usuario';
+    const nome = perfil?.name || nomeFallback || 'Usuário';
 
     return (
         <div
-            className="min-h-screen flex flex-col items-center py-16 px-4"
+            className="min-h-screen flex flex-col items-center justify-between py-16 px-4"
             style={{ backgroundColor: 'var(--color-bg-primary)' }}
         >
-            <main className="w-full max-w-[320px]">
-                {/* Profile */}
-                <div className="text-center my-6">
+            <main className="w-full max-w-sm space-y-6">
+                {/* Header de Perfil Público */}
+                <div className="text-center space-y-3">
                     {perfil?.avatar ? (
                         <img
                             src={perfil.avatar}
-                            alt={`Avatar de ${perfil.name}`}
-                            className="w-20 h-20 mx-auto object-cover mb-3"
-                            style={{ border: '2px solid var(--color-accent)' }}
+                            alt={`Avatar de ${nome}`}
+                            className="w-24 h-24 mx-auto rounded-full object-cover border-2 border-[var(--color-accent)] shadow-lg"
                         />
                     ) : (
                         <div
-                            className="w-20 h-20 mx-auto flex items-center justify-center font-bold tracking-tighter mb-3"
+                            className="w-24 h-24 mx-auto rounded-full flex items-center justify-center font-bold text-2xl border-2 border-[var(--color-accent)] shadow-lg"
                             style={{
                                 backgroundColor: 'var(--color-bg-surface)',
-                                border: '2px solid var(--color-accent)',
                                 color: 'var(--color-accent)',
                             }}
                         >
-                            [{obterIniciais(nome)}]
+                            {obterIniciais(nome)}
                         </div>
                     )}
-                    <h3 className="text-white font-bold text-base">
-                        &lt;{nome}.dev&gt;
-                    </h3>
-                    {perfil?.profession && (
-                        <p className="text-xs mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-                            {perfil.profession}
-                        </p>
-                    )}
-                    <p className="text-[10px] mt-2" style={{ color: 'var(--color-text-muted)' }}>
-                        ~ last login just now
-                    </p>
+
+                    <div>
+                        <h1 className="text-xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                            {nome}
+                        </h1>
+                        {perfil?.profession && (
+                            <p className="text-xs font-semibold mt-1 px-3 py-1 inline-block rounded-full border border-[var(--color-border-default)]" style={{ backgroundColor: 'var(--color-bg-surface)', color: 'var(--color-accent)' }}>
+                                {perfil.profession}
+                            </p>
+                        )}
+                    </div>
                 </div>
 
-                {/* Links */}
-                <div className="space-y-3 mt-8">
+                {/* Lista de Links Públicos */}
+                <div className="space-y-3 pt-4">
                     {perfil?.links && perfil.links.length > 0 ? (
                         perfil.links.map((link, index) => (
                             urlSegura(link.url) ? (
@@ -67,70 +65,43 @@ export function PerfilPublicoView({ perfil, nomeFallback }) {
                                     href={link.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group block p-3 border transition-all flex items-center"
+                                    className="group flex items-center justify-between p-3.5 border border-[var(--color-border-default)] rounded-xl transition-all duration-200 hover:border-[var(--color-accent)] hover:scale-[1.01]"
                                     style={{
-                                        borderColor: 'var(--color-border-default)',
-                                        backgroundColor: 'rgba(17, 17, 17, 0.3)',
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.backgroundColor = 'var(--color-bg-surface)';
-                                        e.currentTarget.style.borderColor = 'var(--color-accent)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.backgroundColor = 'rgba(17, 17, 17, 0.3)';
-                                        e.currentTarget.style.borderColor = 'var(--color-border-default)';
+                                        backgroundColor: 'var(--color-bg-surface)',
                                     }}
                                 >
+                                    <div className="flex items-center gap-2.5 overflow-hidden">
+                                        <span className="text-sm">🔗</span>
+                                        <span className="text-sm font-bold truncate" style={{ color: 'var(--color-text-primary)' }}>
+                                            {link.titulo}
+                                        </span>
+                                    </div>
                                     <span
-                                        className="mr-2 group-hover:translate-x-1 transition-transform"
+                                        className="text-xs font-bold transition-transform group-hover:translate-x-1"
                                         style={{ color: 'var(--color-accent)' }}
                                     >
-                                        ❯
-                                    </span>
-                                    <span className="text-xs" style={{ color: 'var(--color-text-primary)' }}>
-                                        /{link.titulo?.toLowerCase().replace(/\s+/g, '-') || 'link'}
-                                    </span>
-                                    <span className="ml-auto text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-                                        [200]
+                                        ↗
                                     </span>
                                 </a>
-                            ) : (
-                                <div
-                                    key={link._id || link.id || index}
-                                    className="block p-3 border transition-all flex items-center"
-                                    style={{
-                                        borderColor: 'var(--color-border-default)',
-                                        backgroundColor: 'rgba(17, 17, 17, 0.3)',
-                                        opacity: 0.5,
-                                    }}
-                                >
-                                    <span
-                                        className="mr-2"
-                                        style={{ color: 'var(--color-error)' }}
-                                    >
-                                        ⚠
-                                    </span>
-                                    <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                                        /{link.titulo?.toLowerCase().replace(/\s+/g, '-') || 'link'}
-                                    </span>
-                                    <span className="ml-auto text-[10px]" style={{ color: 'var(--color-error)' }}>
-                                        [url invalida]
-                                    </span>
-                                </div>
-                            )
+                            ) : null
                         ))
                     ) : (
-                        <p className="text-center text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                            {'// nenhum link adicionado'}
-                        </p>
+                        <div className="text-center py-8 border border-dashed border-[var(--color-border-default)] rounded-xl" style={{ backgroundColor: 'var(--color-bg-surface)' }}>
+                            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                                Nenhum link cadastrado no momento.
+                            </p>
+                        </div>
                     )}
                 </div>
-
-                {/* Footer */}
-                <div className="text-center mt-12 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-                    <p className="animate-pulse">_ system online</p>
-                </div>
             </main>
+
+            {/* Footer */}
+            <footer className="mt-12 text-center">
+                <span className="text-xs font-semibold tracking-tight inline-flex items-center gap-1.5 opacity-70 hover:opacity-100 transition-opacity" style={{ color: 'var(--color-text-muted)' }}>
+                    <span>🔗</span>
+                    <span>Criado com DevLinks</span>
+                </span>
+            </footer>
         </div>
     );
 }
